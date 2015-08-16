@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Exemplo Upload com Postgresql</title>
+    </h:head>
+    <h:body>
+        <h:form id="foto">
+            <p:growl/>
+
+            <p:commandButton value="Enviar Arquivo"
+                             onstart="PF('statusDialog').show()" 
+                             onsuccess="PF('statusDialog').hide();"
+                             actionListener="#{fotoBean.abrirJanelaUpload()}"/>
+
+            <p:spacer width="50" height="0"/>
+
+            <p:commandButton value="Voltar"
+                             immediate="true"
+                             onstart="PF('statusDialog').show()" 
+                             onsuccess="PF('statusDialog').hide();"
+                             action="index?faces-redirect=true"/>
+
+            <p:dataTable value="#{fotoBean.arquivos}"
+                         var="ft"
+                         emptyMessage="nenhum arquivo salvo"
+                         scrollable="true"
+                         scrollHeight="400"
+                         >
+
+                <f:facet name="header">Lista de Arquivos</f:facet>
+
+                <p:column headerText="Codigo" width="50">
+                    <h:outputText value="#{ft.id}"/>
+                </p:column>
+
+                <p:column headerText="Nome" >
+                    <h:outputText value="#{ft.nome}"/>
+                </p:column>
+
+                <p:column headerText="Download" width="150">    
+                    <p:commandButton value="Download"
+                                     ajax="false"
+                                     onclick="PrimeFaces.monitorDownload(start, stop);"
+                                     icon="ui-icon-arrowthick-1-s">
+                        <p:fileDownload value="#{fotoBean.fazerDownload(ft)}" />
+                    </p:commandButton>
+                </p:column>
+
+                <p:column headerText="Data Hora" width="200">
+                    <h:outputText value="#{ft.dataHora}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Excluir" width="100">
+                    <p:commandButton value="Excluir"
+                                     immediate="true"
+                                     onstart="PF('statusDialog').show()" 
+                                     onsuccess="PF('statusDialog').hide();"
+                                     actionListener="#{fotoBean.excluirArquivo(ft)}"
+                                     update="@form"
+                                     oncomplete="atualizaalturatabela(110);">
+                        <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog
+            widgetVar="dlgfoto"
+            header="Tirar Foto"
+            footer="Tirar Foto"
+            resizable="false"
+            maximizable="false"
+            draggable="false"
+            appendTo="@(body)"
+            width="850"
+            height="300"            
+            modal="true">
+
+            <h:form id="dlgfoto">
+                <p:growl/>
+                <p:fileUpload 
+                    mode="advanced" 
+                    required="true"                                           
+                    style="margin-top: 15px;"
+                    requiredMessage="É necessário o envio de pelo menos um arquivo!"
+                    invalidFileMessage="Tipo de arquivo não permitido" 
+                    invalidSizeMessage="Tamanho excedido(500kb)" 
+                    uploadLabel="Enviar Arquivo"
+                    fileLimit="1"
+                    fileLimitMessage="Apenas um arquivo"
+                    dragDropSupport="true"
+                    cancelLabel="Cancelar"  
+                    label="Selecionar..." 
+                    multiple="false"
+                    sizeLimit="524288000" 
+                    fileUploadListener="#{fotoBean.enviarArquivo}"
+                    update="@form"
+                    allowTypes="/(\.|\/)(gif|jpe?g|png|doc|pdf|txt|docx|bmp|xls|xlsx|ppt|pptx)$/" />
+
+                <p:growl id="messages" showDetail="true" />
+
+
+            </h:form>
+
+        </p:dialog>
+
+
+        <p:dialog widgetVar="statusDialog" header="Status" width="200"  
+                  draggable="false" closable="false" resizable="false" modal="true">  
+            Processando...
+        </p:dialog>
+
+        <h:form>
+            <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </h:body>
+    <script>
+        $(document).ready(function () {
+            atualizaalturatabela(110);
+        });
+
+
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+
+        function atualizaalturatabela(altura) {
+            var o = $(document).height() - altura;
+            //  alert(o);
+            $('.ui-datatable-scrollable-body').css('height', o);
+        }
+    </script>
+</html>
+

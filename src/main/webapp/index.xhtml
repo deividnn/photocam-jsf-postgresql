@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Photocam,Upload de Arquivos e PostgreSQL</title>
+    </h:head>
+    <h:body>
+        <h:form>
+
+            <div align="center">
+
+                <p:commandButton value="Photocam"
+                                 immediate="true"
+                                 onstart="PF('statusDialog').show()" 
+                                 onsuccess="PF('statusDialog').hide();"
+                                 action="fotos?faces-redirect=true"/>
+                
+                <p:spacer width="50" height="0"/>
+
+                
+                <p:commandButton value="Upload Arquivos"
+                                 immediate="true"
+                                 onstart="PF('statusDialog').show()" 
+                                 onsuccess="PF('statusDialog').hide();"
+                                 action="uploads?faces-redirect=true"/>
+                
+                <p:spacer width="50" height="0"/>
+            </div>
+
+
+
+        </h:form>
+    </h:body>
+</html>
+

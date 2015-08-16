@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Exemplo Photocam com Postgresql</title>
+    </h:head>
+    <h:body>
+        <h:form id="foto">
+             <p:growl/>
+           
+            <p:commandButton value="Abrir Webcam"
+                             onstart="PF('statusDialog').show()" 
+                             onsuccess="PF('statusDialog').hide();"
+                             actionListener="#{fotoBean.abrirJanelaFoto()}"/>
+            
+             <p:spacer width="50" height="0"/>
+            
+            <p:commandButton value="Voltar"
+                                 immediate="true"
+                                 onstart="PF('statusDialog').show()" 
+                                 onsuccess="PF('statusDialog').hide();"
+                                 action="index?faces-redirect=true"/>
+
+            <p:dataTable value="#{fotoBean.fotos}"
+                         var="ft"
+                         emptyMessage="nenhuma foto salva"
+                         scrollable="true"
+                         scrollHeight="400"
+                         >
+
+                <f:facet name="header">Lista de Fotos</f:facet>
+
+                <p:column headerText="Codigo" width="50">
+                    <h:outputText value="#{ft.id}"/>
+                </p:column>
+
+                <p:column headerText="Foto">    
+
+                    <p:graphicImage value="#{imageStream.foto}"
+                                    width="80"
+                                    height="80">
+                        <f:param name="id" value="#{ft.id}" />
+                    </p:graphicImage>
+                </p:column>
+
+                <p:column headerText="Data Hora" width="200">
+                    <h:outputText value="#{ft.dataHora}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Excluir" width="100">
+                    <p:commandButton value="Excluir"
+                                     immediate="true"
+                                     onstart="PF('statusDialog').show()" 
+                                     onsuccess="PF('statusDialog').hide();"
+                                     actionListener="#{fotoBean.excluir(ft)}"
+                                     update="@form"
+                                     oncomplete="atualizaalturatabela(110);">
+                     <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog
+            widgetVar="dlgfoto"
+            header="Tirar Foto"
+            footer="Tirar Foto"
+            resizable="false"
+            maximizable="false"
+            draggable="false"
+            appendTo="@(body)"
+            width="850"
+            height="300"            
+            modal="true">
+
+            <h:form id="dlgfoto">
+                 <p:growl/>
+
+                <h:panelGrid columns="3" cellpadding="5">
+
+                    <p:photoCam
+                        rendered="#{fotoBean.abriuWebcam}"
+                        widgetVar="pc" 
+                        listener="#{fotoBean.tirarFoto}"
+                        update=":dlgfoto:botoes :dlgfoto:photo"
+                        />
+
+                    <h:panelGroup id="botoes" style="text-align:center ">
+                        <p:commandButton 
+                            type="button" 
+                            onstart="PF('statusDialog').show()" 
+                            onsuccess="PF('statusDialog').hide();"
+                            style="width: 150px"
+                            value="Tirar Foto"
+                            onclick="PF('pc').capture()"/>
+
+                        <p:commandButton 
+                            style="width: 150px"
+                            value="Salvar Foto"  
+                            onstart="PF('statusDialog').show()" 
+                            onsuccess="PF('statusDialog').hide();"
+                            rendered="#{not empty fotoBean.arquivo}"
+                            actionListener="#{fotoBean.salvarFoto()}"
+                            oncomplete="atualizaalturatabela(110);">
+                            <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                    <p:outputPanel id="photo">                        
+                        <p:graphicImage 
+                            name="fotossalvas/#{fotoBean.arquivo}.jpeg"
+                            rendered="#{not empty fotoBean.arquivo}"/>                    
+                    </p:outputPanel>                  
+
+
+                </h:panelGrid>
+
+
+            </h:form>
+
+        </p:dialog>
+
+
+        <p:dialog widgetVar="statusDialog" header="Status" width="200"  
+                  draggable="false" closable="false" resizable="false" modal="true">  
+            Processando...
+        </p:dialog>
+
+        <h:form>
+            <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </h:body>
+    <script>
+        $(document).ready(function () {
+            atualizaalturatabela(110);
+        });
+
+
+        function atualizaalturatabela(altura) {
+            var o = $(document).height() - altura;
+            //  alert(o);
+            $('.ui-datatable-scrollable-body').css('height', o);
+        }
+    </script>
+</html>
+
