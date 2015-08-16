@@ -45,6 +45,15 @@
                         <f:param name="id" value="#{ft.id}" />
                     </p:graphicImage>
                 </p:column>
+                
+                <p:column headerText="Download" width="150">    
+                    <p:commandButton value="Download"
+                                     ajax="false"
+                                     onclick="PrimeFaces.monitorDownload(start, stop);"
+                                     icon="ui-icon-arrowthick-1-s">
+                        <p:fileDownload value="#{fotoBean.fazerDownloadFoto(ft)}" />
+                    </p:commandButton>
+                </p:column>
 
                 <p:column headerText="Data Hora" width="200">
                     <h:outputText value="#{ft.dataHora}">
@@ -144,6 +153,15 @@
             atualizaalturatabela(110);
         });
 
+
+
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
 
         function atualizaalturatabela(altura) {
             var o = $(document).height() - altura;

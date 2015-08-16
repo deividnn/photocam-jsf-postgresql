@@ -181,6 +181,12 @@ public class FotoBean implements Serializable {
         return new DefaultStreamedContent(
                 new ByteArrayInputStream(f.getArquivo()), "application/octet-stream", f.getNome());
     }
+    
+      public StreamedContent fazerDownloadFoto(Foto f) {
+          String nome=gerarNome();
+        return new DefaultStreamedContent(
+                new ByteArrayInputStream(f.getArquivo()), "image/jpeg",nome+".jpeg");
+    }
 
     public void excluirArquivo(Foto f) {
         try {
