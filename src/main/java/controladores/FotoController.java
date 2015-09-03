@@ -12,7 +12,7 @@ import util.Util;
  */
 /**
  *
- * @author Magazine L
+ * @author DeividNn
  */
 public class FotoController {
 

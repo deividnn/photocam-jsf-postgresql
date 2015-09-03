@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="01dbbd68-7e09-4665-a877-1226ceaf0026">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select * from foto where id=$P{id} limit 1]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="arquivo" class="java.lang.Object"/>
+	<field name="data_hora" class="java.sql.Timestamp"/>
+	<field name="nome" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="273" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="-13" width="555" height="273" uuid="045cfe82-a784-4258-b297-eb32decacbcb"/>
+			</rectangle>
+			<image>
+				<reportElement x="17" y="15" width="164" height="151" uuid="df2b4f9f-f67b-4869-a55e-32f90556214e"/>
+				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.loadImage ((byte []) $F{arquivo})]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="233" y="15" width="281" height="20" uuid="b37b7c20-705d-4825-b040-7bafe29d6446"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="233" y="146" width="281" height="20" uuid="e518d007-24b0-4054-8a83-d443e47cff4c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_hora}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="233" y="84" width="281" height="20" uuid="c6fbcbd9-fbb5-4557-b16d-ae9be82a1b68"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="17" y="197" width="497" height="50" uuid="c9f1b734-dab6-47cd-8114-7531421b47dd"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128B" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA["1234123412341234"]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</title>
+</jasperReport>

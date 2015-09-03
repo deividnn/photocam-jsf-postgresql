@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Magazine L
+ * @author DeividNn
  */
 @Entity
 public class Foto implements Serializable{

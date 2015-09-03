@@ -11,7 +11,7 @@ import org.hibernate.Session;
 
 /**
  *
- * @author Magazine L
+ * @author DeividNn
  * @param <T>
  */
 public class HibernateDAO<T> implements DAO<T>, Serializable {

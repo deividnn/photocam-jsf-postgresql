@@ -9,20 +9,20 @@
     </h:head>
     <h:body>
         <h:form id="foto">
-             <p:growl/>
-           
+            <p:growl/>
+
             <p:commandButton value="Abrir Webcam"
                              onstart="PF('statusDialog').show()" 
                              onsuccess="PF('statusDialog').hide();"
                              actionListener="#{fotoBean.abrirJanelaFoto()}"/>
-            
-             <p:spacer width="50" height="0"/>
-            
+
+            <p:spacer width="50" height="0"/>
+
             <p:commandButton value="Voltar"
-                                 immediate="true"
-                                 onstart="PF('statusDialog').show()" 
-                                 onsuccess="PF('statusDialog').hide();"
-                                 action="index?faces-redirect=true"/>
+                             immediate="true"
+                             onstart="PF('statusDialog').show()" 
+                             onsuccess="PF('statusDialog').hide();"
+                             action="index?faces-redirect=true"/>
 
             <p:dataTable value="#{fotoBean.fotos}"
                          var="ft"
@@ -45,20 +45,22 @@
                         <f:param name="id" value="#{ft.id}" />
                     </p:graphicImage>
                 </p:column>
-                
-                <p:column headerText="Download" width="150">    
-                    <p:commandButton value="Download"
-                                     ajax="false"
-                                     onclick="PrimeFaces.monitorDownload(start, stop);"
-                                     icon="ui-icon-arrowthick-1-s">
-                        <p:fileDownload value="#{fotoBean.fazerDownloadFoto(ft)}" />
-                    </p:commandButton>
-                </p:column>
 
                 <p:column headerText="Data Hora" width="200">
                     <h:outputText value="#{ft.dataHora}">
                         <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
                     </h:outputText>
+                </p:column>
+
+                <p:column width="200">
+                    <p:commandButton value="Gerar Carteria"
+                                     immediate="true"
+                                     onstart="PF('statusDialog').show()" 
+                                     onsuccess="PF('statusDialog').hide();"
+                                     actionListener="#{util.gerarRelatorio('carteira',ft.id)}"
+                                     oncomplete="atualizaalturatabela(110);">
+
+                    </p:commandButton>
                 </p:column>
 
                 <p:column headerText="Excluir" width="100">
@@ -69,7 +71,7 @@
                                      actionListener="#{fotoBean.excluir(ft)}"
                                      update="@form"
                                      oncomplete="atualizaalturatabela(110);">
-                     <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
                     </p:commandButton>
                 </p:column>
 
@@ -89,7 +91,7 @@
             modal="true">
 
             <h:form id="dlgfoto">
-                 <p:growl/>
+                <p:growl/>
 
                 <h:panelGrid columns="3" cellpadding="5">
 
@@ -147,21 +149,41 @@
                 <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
         </h:form>
+
+
+
+        <p:dialog draggable="false"  
+                  widgetVar="dlgrelatorio"
+                  dynamic="true"
+                  header="Ver Relatorio"
+                  closeOnEscape="true"
+                  closable="true" 
+                  width="950"
+                  height="550" 
+                  modal="true"
+                  resizable="false"
+
+                  >
+
+            <h:form id="relatorio">
+                #{util.arquivo}
+                <p:media player="pdf" 
+                         value="/resources/fotossalvas/#{util.arquivo}.pdf"
+                         width="100%"
+                         height="500"/>
+
+
+            </h:form>
+        </p:dialog>
+
+
+
     </h:body>
     <script>
         $(document).ready(function () {
             atualizaalturatabela(110);
         });
 
-
-
-        function start() {
-            PF('statusDialog').show();
-        }
-
-        function stop() {
-            PF('statusDialog').hide();
-        }
 
         function atualizaalturatabela(altura) {
             var o = $(document).height() - altura;

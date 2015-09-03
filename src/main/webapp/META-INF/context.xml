@@ -2,14 +2,14 @@
 <Context  path="/photocam-jsf-postgresql">
 
     <Resource name="jdbc/photo" 
-              auth="Container"
-              factory="org.apache.naming.factory.BeanFactory" 
-              type="com.mchange.v2.c3p0.ComboPooledDataSource"
-              driverClass="org.postgresql.Driver" 
-              jdbcUrl="jdbc:postgresql://localhost:5432/photocam"
-              user="deivid"
-              password="deivid"
-              maxPoolSize="5" 
-              minPoolSize="5"  />
+                  auth="Container"
+                  factory="org.apache.naming.factory.BeanFactory" 
+                  type="com.mchange.v2.c3p0.ComboPooledDataSource"
+                  driverClass="org.postgresql.Driver" 
+                  jdbcUrl="jdbc:postgresql://localhost:5432/photocam"
+                  user="deivid"
+                  password="deivid"
+                  minPoolSize="2" 
+                  maxPoolSize="2" />
 
 </Context>
